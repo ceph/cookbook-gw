@@ -1,0 +1,4 @@
+organization = "Ceph Storage Inc"
+cn = "openvpnca-cephco-sepia"
+expiration_days = 1000
+ca

@@ -1,0 +1,63 @@
+#!/usr/bin/python
+
+# How to set up a client (on Ubuntu/Debian):
+#
+# sudo apt-get install openvpn
+# cd /etc/openvpn
+# sudo tar xvzf ~/cephco-sepia-client.tar.gz
+# sudo ./cephco-sepia.client/new-client MYUSERNAME@MYHOST
+#
+# ... submit the secret to admin and wait for acknowledgment ...
+#
+# sudo service openvpn start cephco-sepia
+
+import base64
+import hashlib
+import os
+import re
+import sys
+
+path = os.path.dirname(sys.argv[0])
+os.chdir(path)
+
+try:
+    (user,) = sys.argv[1:]
+except ValueError:
+    raise SystemExit('Usage: new-client USERNAME@HOST')
+
+# From openvpn(8):
+#
+# To protect against a client passing a maliciously formed username or
+# password string, the username string must consist only of these
+# characters: alphanumeric, underbar ('_'), dash ('-'), dot ('.'), or
+# at ('@'). The password string can consist of any printable
+# characters except for CR or LF. Any illegal characters in either the
+# username or password string will be converted to underbar ('_').
+#
+# Verifying this here to avoid confusion down the road.
+if not re.match(r'^[a-zA-Z0-9_.@-]+$', user):
+    raise SystemExit('new-client: Invalid characters in username')
+
+salt = base64.b64encode(os.urandom(16)).rstrip('=')
+secret = base64.b64encode(os.urandom(64)).rstrip('=')
+
+inner = hashlib.new('sha256')
+inner.update(salt)
+inner.update(secret)
+outer = hashlib.new('sha256')
+outer.update(inner.digest())
+outer.update(salt)
+hashed = outer.hexdigest()
+
+with file('secret', 'wb') as f:
+    os.fchmod(f.fileno(), 0600)
+    f.write('{user}\n{secret}\n'.format(user=user, secret=secret))
+
+base = os.path.basename(path)
+os.symlink(os.path.join(base, 'client.conf'), '../cephco-sepia.conf.tmp')
+os.rename('../cephco-sepia.conf.tmp', '../cephco-sepia.conf')
+
+print '  Please submit the following line to the OpenVPN admin:'
+print
+print user, salt, hashed
+print
