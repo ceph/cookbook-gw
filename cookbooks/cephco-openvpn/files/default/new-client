@@ -7,7 +7,7 @@
 # sudo tar xvzf ~/cephco-sepia-client.tar.gz
 # sudo ./cephco-sepia.client/new-client MYUSERNAME@MYHOST
 #
-# ... submit the secret to admin and wait for acknowledgment ...
+# ... submit the authentication code to admin and wait for acknowledgment ...
 #
 # sudo service openvpn start cephco-sepia
 
