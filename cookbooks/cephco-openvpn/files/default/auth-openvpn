@@ -36,7 +36,7 @@ def authenticate():
     #
     # We'll just redo that quickly for usernames, to ensure they are safe.
 
-    user = re.sub(r'[^a-zA-Z_.@-]', '_', user)
+    user = re.sub(r'[^a-zA-Z0-9_.@-]', '_', user)
 
     def find_user(wanted):
         with file('/etc/openvpn/cephco-sepia.data/users') as f:
@@ -64,7 +64,7 @@ def authenticate():
     attempt = outer.hexdigest()
 
     if attempt != correct:
-        print >>sys.stderr, '{prog}: invalid auth.'.format(prog=os.path.basename(sys.argv[0]))
+        log.error('{prog}: invalid auth for user {user!r}.'.format(prog=os.path.basename(sys.argv[0])), user=user)
         sys.exit(1)
 
 def main():
