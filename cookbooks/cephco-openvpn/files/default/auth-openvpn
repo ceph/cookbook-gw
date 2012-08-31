@@ -64,7 +64,7 @@ def authenticate():
     attempt = outer.hexdigest()
 
     if attempt != correct:
-        log.error('{prog}: invalid auth for user {user!r}.'.format(prog=os.path.basename(sys.argv[0])), user=user)
+        log.error('{prog}: invalid auth for user {user!r}.'.format(prog=os.path.basename(sys.argv[0]), user=user))
         sys.exit(1)
 
 def main():
