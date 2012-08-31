@@ -85,6 +85,7 @@ def main():
         raise
     except:
         log.exception('Unhandled error: ')
+        raise
 
 if __name__ == '__main__':
     sys.exit(main())
