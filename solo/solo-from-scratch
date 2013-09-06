@@ -28,13 +28,31 @@ if [ -n "$missing" ]; then
 fi
 
 SCRATCH="$(mktemp -d --tmpdir 'solo-from-scratch.XXXXXXXXXXXX')"
-cd "$SCRATCH"
+hostname=$(hostname)
+if [ "$hostname" = "gw1" ]
+then
+    remote="10.215.1.2"
+fi
 
+if [ "$hostname" = "gw2" ]
+then
+    remote="10.215.1.1"
+fi
 cleanup () {
     rm -rf "$SCRATCH"
 }
 
 trap cleanup INT TERM EXIT
+
+cd "$SCRATCH"
 git init
 git pull https://github.com/ceph/cookbook-gw.git
+echo Syncing to other gateway box...
+rsync -a $SCRATCH $remote:/tmp/
 ./solo/run
+ssh $remote <<EOF
+cd "$SCRATCH"
+./solo/run
+rm -rf "$SCRATCH"
+EOF
+
