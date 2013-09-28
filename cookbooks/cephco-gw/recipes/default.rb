@@ -14,6 +14,22 @@ service "ferm" do
   reload_command "service ferm reload"
 end
 
+package 'squid3'
+
+cookbook_file '/etc/squid3/squid.conf' do
+  source "squid.conf"
+  mode 0644
+  owner "root"
+  group "adm"
+  notifies :reload, "service[squid3]"
+end
+
+service "squid3" do
+  action [:enable, :start]
+  supports [:reload]
+  reload_command "service squid reload"
+end
+
 file '/etc/sysctl.d/60-cephco-gw.conf' do
   owner 'root'
   group 'root'
