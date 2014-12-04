@@ -1,4 +1,3 @@
-./cookbooks/cephco-openvpn/files/default/server.template
 organization = "Redhat"
 cn = "openvpnca-sepia"
 expiration_days = 3650
