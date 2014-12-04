@@ -1,6 +1,6 @@
-organization = "Ceph Storage Inc"
-cn = "openvpn-cephco-sepia"
-expiration_days = 1000
+organization = "Redhat"
+cn = "openvpn-sepia"
+expiration_days = 3650
 tls_www_server
 signing_key
 encryption_key
