@@ -47,12 +47,12 @@ trap cleanup INT TERM EXIT
 cd "$SCRATCH"
 git init
 git pull https://github.com/ceph/cookbook-gw.git
-echo Syncing to other gateway box...
-rsync -a $SCRATCH $remote:/tmp/
+#echo Syncing to other gateway box...
+#rsync -a $SCRATCH $remote:/tmp/
 ./solo/run
-ssh $remote <<EOF
-cd "$SCRATCH"
-./solo/run
+#ssh $remote <<EOF
+#cd "$SCRATCH"
+#./solo/run
 rm -rf "$SCRATCH"
 EOF
 
