@@ -53,6 +53,6 @@ git pull https://github.com/ceph/cookbook-gw.git
 #ssh $remote <<EOF
 #cd "$SCRATCH"
 #./solo/run
-rm -rf "$SCRATCH"
-EOF
+#rm -rf "$SCRATCH"
+#EOF
 
